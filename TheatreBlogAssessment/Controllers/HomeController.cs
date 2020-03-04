@@ -4,30 +4,41 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TheatreBlogAssessment.Models;
+using System.Data.Entity;
 
 namespace TheatreBlogAssessment.Controllers
 {
     public class HomeController : Controller
     {
         private TheatreDbContext context = new TheatreDbContext();
+        // GET: Home
         public ActionResult Index()
         {
             var posts = context.Posts.Include(p => p.Category).Include(p => p.User).OrderByDescending(p => p.DatePosted);
-            return View();
+            ViewBag.Categories = context.Categories.ToList();
+            return View(posts);
         }
 
-        public ActionResult About()
+        [HttpPost]
+        public ActionResult Index(string SearchString)
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            var posts = context.Posts.Include(p => p.Category).Include(p => p.User).Where(p => p.Category.Name.Equals(SearchString.Trim())).OrderByDescending(p => p.DatePosted);
+            return View(posts.ToList());
         }
-
-        public ActionResult Contact()
+        public ActionResult Details(int id)
         {
-            ViewBag.Message = "Your contact page.";
+            Post post = context.Posts.Find(id);
 
-            return View();
+            var user = context.Users.Find(post.UserId);
+            var category = context.Categories.Find(post.CategoryId);
+            var comments = context.Comments.Include(c=>c.User);
+
+            post.User = user;
+            post.Category = category;
+            post.Comments = comments.ToList();
+
+            return View(post);
         }
+
     }
 }
