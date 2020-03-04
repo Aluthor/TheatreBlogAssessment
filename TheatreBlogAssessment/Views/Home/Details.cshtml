@@ -1,0 +1,92 @@
+﻿@model TheatreBlogAssessment.Models.Post
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Post</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DatePosted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DatePosted)
+        </dd>
+        
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PostId })
+    
+    @Html.ActionLink("Back to List", "Index")
+</p>
+<table>
+    @foreach (var item in Model.Comments)
+    {
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.UserName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.UserName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(modelItem => item.Content)
+        </dt>
+        <dd>
+            @Html.DisplayFor(modelItem => item.Content)
+        </dd>
+
+        <td>
+            @if(User.IsInRole("Member"))
+           {
+            @Html.ActionLink("Edit", "Edit", new { id = item.CommentId}) 
+            @Html.ActionLink("Delete", "Delete", new { id = item.CommentId })
+            }
+            @if((User.IsInRole("Staff") || User.IsInRole("Admin")) && item.IsAproved ==false)
+            {
+            @Html.ActionLink("Approve", "Approve", new { id = item.CommentId})
+            }
+        </td>
+    }
+
+</table>
+
