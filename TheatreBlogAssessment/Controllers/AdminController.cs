@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using TheatreBlogAssessment.Models;
 using System.Data;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace TheatreBlogAssessment.Controllers
 {
@@ -172,5 +173,76 @@ namespace TheatreBlogAssessment.Controllers
             return View(users);
         }
 
+        //HttpGET ChangeRole Action
+        public async Task<ActionResult> ChangeRole(string id)
+        {
+            UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if(id == User.Identity.GetUserId())
+            {
+                return RedirectToAction("Index");
+            }
+            
+            User user = await userManager.FindByIdAsync(id);
+            string oldRole = (await userManager.GetRolesAsync(id)).Single();
+
+            var items = db.Roles.Select(r => new SelectListItem
+            {
+                Text = r.Name,
+                Value = r.Name,
+                Selected = r.Name == oldRole
+            }).ToList();
+
+            return View(new ChangeRoleViewModel
+            {
+                UserName = user.UserName,
+                Roles = items,
+                OldRole = oldRole,
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("ChangeRole")]
+        public async Task<ActionResult> ChangeRoleConfirmed(string id, [Bind(Include ="Role")] ChangeRoleViewModel model)
+        {
+            UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
+
+            if (id == User.Identity.GetUserId())
+            {
+                //Flash.Instance.Error("Error", "You cannot change your own role");
+                return RedirectToAction("Index");
+            }
+            if(ModelState.IsValid)
+            {
+                User user = await userManager.FindByIdAsync(id);
+                string oldRole = (await userManager.GetRolesAsync(id)).Single();
+
+                if (oldRole == model.Role)
+                {
+                    //[Flash error]
+                    return RedirectToAction("Index");
+                }
+
+                await userManager.RemoveFromRoleAsync(id, oldRole);
+                await userManager.AddToRoleAsync(id, model.Role);
+
+                if(model.Role != "Suspended")
+                {
+                    //I have no idea what this is doing or why
+                    //db.Database.ExecuteSqlCommand(
+                    //    "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
+                    //    model.Role == "Admin" ? "Staff" : model.Role,
+                    //    id);
+                }
+                //[Flash success msg]
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
     }
 }

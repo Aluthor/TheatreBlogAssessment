@@ -259,6 +259,7 @@
     <Content Include="Views\Admin\ViewAllPosts.cshtml" />
     <Content Include="Views\Admin\DeletePost.cshtml" />
     <Content Include="Views\Admin\ViewUsers.cshtml" />
+    <Content Include="Views\Admin\ChangeRole.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

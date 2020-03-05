@@ -149,15 +149,53 @@ namespace TheatreBlogAssessment.Models
                 User = staff1,
                 Category = cat2
             };
+            context.Posts.Add(post1);
+
+            var post2 = new Post()
+            {
+                Title = "MacBeth Announcement",
+                Content = "MacBeth performance will be canceled because the play sucks.",
+                DatePosted = new DateTime(2019, 1, 1, 8, 0, 15),
+                User = staff2,
+                Category = cat1
+            };
+            context.Posts.Add(post2);
+
+            var post3 = new Post()
+            {
+                Title = "Hi",
+                Content = "Just saying 'hey!'",
+                DatePosted = new DateTime(2019, 1, 1, 8, 0, 15),
+                User = staff1,
+                Category = cat3
+            };
+            context.Posts.Add(post3);
+
+            var post4 = new Post()
+            {
+                Title = "Romeo and Juliet Review",
+                Content = "Somehow worse than MacBeth.",
+                DatePosted = new DateTime(2019, 1, 1, 8, 0, 15),
+                User = staff2,
+                Category = cat2
+            };
+            context.Posts.Add(post4);
 
             var com1 = new Comment()
             {
                 Content = "FIRST!1!!",
                 Post = post1
+                //User = member2
+            };
+            context.Comments.Add(com1);
+            var com2 = new Comment()
+            {
+                Content = "FIRST!2!!",
+                Post = post1,
+                User = member1
             };
             
-            context.Posts.Add(post1);
-            context.Comments.Add(com1);
+            context.Comments.Add(com2);
 
             context.SaveChanges();
         }

@@ -16,15 +16,17 @@ namespace TheatreBlogAssessment.Controllers
         {
             var posts = context.Posts.Include(p => p.Category).Include(p => p.User).OrderByDescending(p => p.DatePosted);
             ViewBag.Categories = context.Categories.ToList();
-            return View(posts);
+            return View(posts.ToList());
         }
 
         [HttpPost]
         public ActionResult Index(string SearchString)
         {
             var posts = context.Posts.Include(p => p.Category).Include(p => p.User).Where(p => p.Category.Name.Equals(SearchString.Trim())).OrderByDescending(p => p.DatePosted);
+            ViewBag.Categories = context.Categories.ToList();
             return View(posts.ToList());
         }
+
         public ActionResult Details(int id)
         {
             Post post = context.Posts.Find(id);

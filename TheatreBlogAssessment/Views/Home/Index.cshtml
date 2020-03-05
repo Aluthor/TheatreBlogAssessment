@@ -5,8 +5,15 @@
     ViewBag.Title = "Index";
 }
 
-    <h2>All Posts</h2>
+<h2>All Posts</h2>
 
+<br />
+<hr />
+
+@foreach (var item in ViewBag.Categories)
+{
+    <b> @item.Name | </b>
+}
 <br />
 <hr />
 
@@ -20,12 +27,7 @@
 <br />
 <hr />
 
-@foreach (var item in ViewBag.Categories)
-{
-    <b> @item.Name | </b>
-}
-<br />
-<hr />
+
 
 <p>
     @Html.ActionLink("Create New", "Create")
