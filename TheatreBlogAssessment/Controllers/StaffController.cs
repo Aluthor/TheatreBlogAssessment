@@ -15,7 +15,7 @@ namespace TheatreBlogAssessment.Controllers
         private TheatreDbContext db = new TheatreDbContext();
 
         // GET: Staff
-        [Authorize(Roles = "Staff"), Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Staff, Admin")]
         public ActionResult Index()
         {
             var posts = db.Posts.Include(p => p.Category).Include(p => p.User);
