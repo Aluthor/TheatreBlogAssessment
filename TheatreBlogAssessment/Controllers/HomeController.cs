@@ -98,7 +98,7 @@ namespace TheatreBlogAssessment.Controllers
             return View(comment);
         }
 
-        //redirects to staff controller
+        //redirects to staff controller(edit post)
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -142,6 +142,52 @@ namespace TheatreBlogAssessment.Controllers
             
 
         }
+        [HttpGet]
+        public ActionResult EditComment(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Comment comment = context.Comments.Find(id);
+
+            if (comment == null)
+            {
+                return HttpNotFound();
+            }
+
+            //ViewBag.CategoryId = new SelectList(context.Categories, "CategoryId", "Name", post.CategoryId);
+            return View(comment);
+        }
+
+        // POST: Staff/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditComment(Comment comment)
+        {
+
+            if (ModelState.IsValid)
+            {
+                comment.CommentDate = DateTime.Now;
+                comment.HasBeenEdited = true;
+                comment.IsAproved = false;
+
+                comment.UserId = User.Identity.GetUserId();
+
+                Post post = context.Posts.Find(comment.PostId);
+                User user = context.Users.Find(comment.UserId);
+                comment.Post = post;
+                comment.User = user;
+
+                context.Entry(comment).State = EntityState.Modified;
+                context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            //ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId);
+            return View(comment);
+
+        }
+
     }
-    
 }

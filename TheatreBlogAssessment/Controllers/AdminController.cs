@@ -131,6 +131,22 @@ namespace TheatreBlogAssessment.Controllers
             return View(category);
         }
 
+        public ActionResult DetailsPost(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Post post= db.Posts.Find(id);
+            if (post== null)
+            {
+                return HttpNotFound();
+            }
+
+            return RedirectToAction("Details", "Home", new { id = post.PostId });
+        }
+
         //******************************Posts********************************
         [Authorize(Roles = "Admin")]
         public ActionResult ViewAllPosts()

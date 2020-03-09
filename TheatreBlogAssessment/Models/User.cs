@@ -26,7 +26,8 @@ namespace TheatreBlogAssessment.Models
         [Required]
         [Display(Name = "Postcode")]
         public string Postcode { get; set; }
-
+        [Required]
+        public bool IsSuspended { get; set; }
         //navigational
         public List<Comment> Comments { get; set; }
         public List<Post> Posts { get; set; }
