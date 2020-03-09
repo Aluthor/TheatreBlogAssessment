@@ -76,12 +76,15 @@
             </td>
 
             <td>
-                @if (User.IsInRole("Member"))
+                @if (User.Identity.Name == item.User.UserName)
                 {
-                    @Html.ActionLink("Edit", "Edit", new { id = item.CommentId })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.CommentId })
+                    @Html.ActionLink("Edit ", "EditComment", new { id = item.CommentId })
                 }
+                @if (User.Identity.Name == item.User.UserName || User.IsInRole("Admin"))
+                {
+                    @Html.ActionLink("Delete", "DeleteComment", new { id = item.CommentId })
                 }
+
                 @if ((User.IsInRole("Staff") || User.IsInRole("Admin")) && item.IsAproved == false)
                 {
                     @Html.ActionLink("Approve", "Approve", new { id = item.CommentId })

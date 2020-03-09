@@ -154,6 +154,13 @@ namespace TheatreBlogAssessment.Controllers
             List<Post> posts = db.Posts.Include(p => p.Category).Include(p => p.User).ToList();
             return View(posts);
         }
+        [HttpPost]
+        public ActionResult ViewAllPosts(string SearchString)
+        {
+            var posts = db.Posts.Include(p => p.Category).Include(p => p.User).Where(p => p.Category.Name.Equals(SearchString.Trim())).OrderByDescending(p => p.DatePosted);
+            ViewBag.Categories = db.Categories.ToList();
+            return View(posts.ToList());
+        }
 
         //GET: Posts/Delete/5
         public ActionResult DeletePost(int? id)
@@ -178,6 +185,22 @@ namespace TheatreBlogAssessment.Controllers
             db.Posts.Remove(post);
             db.SaveChanges();
             return RedirectToAction("ViewAllPosts");
+        }
+
+        public ActionResult DeleteComment(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Comment comment = db.Comments.Find(id);
+            
+            if (comment == null)
+            {
+                return HttpNotFound();
+            }
+
+            return RedirectToAction("DeleteComment", "Home", new { id = comment.CommentId});
         }
 
         //************************USERS****************************

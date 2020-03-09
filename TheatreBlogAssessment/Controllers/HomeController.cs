@@ -204,5 +204,40 @@ namespace TheatreBlogAssessment.Controllers
 
             return RedirectToAction("Delete", "Staff", new { id = post.PostId });
         }
+
+        [HttpGet]
+        public ActionResult DeleteComment(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Comment comment = context.Comments.Find(id);
+            var post = context.Posts.Find(comment.PostId);
+            comment.Post = post;
+
+            if (comment== null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(comment);
+        }
+
+        // POST: Staff/Delete/5
+        [HttpPost, ActionName("DeleteComment")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteCommentConfirmed(int id)
+        {
+            Comment comment = context.Comments.Find(id);
+            context.Comments.Remove(comment);
+            
+
+            //probably going to have to loop here to delete all comments
+
+            context.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
