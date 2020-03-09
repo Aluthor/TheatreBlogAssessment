@@ -35,7 +35,7 @@ namespace TheatreBlogAssessment.Controllers
 
             var user = context.Users.Find(post.UserId);
             var category = context.Categories.Find(post.CategoryId);
-            var comments = context.Comments.Include(c=>c.User);
+            var comments = context.Comments.Include(c => c.User);
 
             post.User = user;
             post.Category = category;
@@ -44,7 +44,7 @@ namespace TheatreBlogAssessment.Controllers
             return View(post);
         }
 
-        [Authorize(Roles ="Member, Staff, Admin")]
+        [Authorize(Roles = "Member, Staff, Admin")]
         public ActionResult CreateComment(int? id)
         {
             //ViewBag.PostId = new SelectList(db.Posts, "PostId", "Title");
@@ -98,6 +98,50 @@ namespace TheatreBlogAssessment.Controllers
             return View(comment);
         }
 
+        //redirects to staff controller
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
+            Post post = context.Posts.Find(id);
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+
+            return RedirectToAction("Edit", "Staff", new { id = post.PostId });
+        }
+
+        [Authorize(Roles = "Staff, Admin")]
+        public ActionResult Approve(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Comment comment = context.Comments.Find(id);
+            if (comment == null)
+            {
+                return HttpNotFound();
+            }
+            return View(comment);
+        }
+
+        [HttpPost, ActionName("Approve")]
+        [ValidateAntiForgeryToken]
+        public ActionResult ApproveConfirmed(int id)
+        {
+            Comment comment = context.Comments.Find(id);
+            comment.IsAproved = true;
+            context.SaveChanges();
+            return RedirectToAction("Index");
+            
+
+        }
     }
+    
 }

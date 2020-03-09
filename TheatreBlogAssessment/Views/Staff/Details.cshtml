@@ -59,6 +59,8 @@
 <table class="table" title="comments">
     @foreach (var item in Model.Comments)
     {
+        if (item.IsAproved == true)
+        {
         <tr>
             <td>
                 @Html.DisplayNameFor(ModelItem => item.User.UserName)
@@ -79,6 +81,7 @@
                     @Html.ActionLink("Edit", "Edit", new { id = item.CommentId })
                     @Html.ActionLink("Delete", "Delete", new { id = item.CommentId })
                 }
+                }
                 @if ((User.IsInRole("Staff") || User.IsInRole("Admin")) && item.IsAproved == false)
                 {
                     @Html.ActionLink("Approve", "Approve", new { id = item.CommentId })
@@ -86,6 +89,7 @@
             </td>
         </tr>
         <br />
+        }
     }
 
 </table>

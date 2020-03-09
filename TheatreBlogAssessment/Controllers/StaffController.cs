@@ -27,17 +27,25 @@ namespace TheatreBlogAssessment.Controllers
         // GET: Staff/Details/5
         public ActionResult Details(int? id) //? Creates a nullable variable
         {
-            if(id == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             Post post = db.Posts.Find(id);
 
-            if(post == null)
+            if (post == null)
             {
                 return HttpNotFound();
             }
+            var user = db.Users.Find(post.UserId);
+            var category = db.Categories.Find(post.CategoryId);
+            var comments = db.Comments.Include(c => c.User);
+
+            post.User = user;
+            post.Category = category;
+            post.Comments = comments.ToList();
+
             return View(post);
         }
 
@@ -53,7 +61,7 @@ namespace TheatreBlogAssessment.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "PostId, Title, Content, CategoryId")] Post post)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 post.DatePosted = DateTime.Now;
                 post.UserId = User.Identity.GetUserId();
@@ -108,7 +116,7 @@ namespace TheatreBlogAssessment.Controllers
         // GET: Staff/Delete/5
         public ActionResult Delete(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -117,7 +125,7 @@ namespace TheatreBlogAssessment.Controllers
             var category = db.Categories.Find(post.CategoryId);
             post.Category = category;
 
-            if(post == null)
+            if (post == null)
             {
                 return HttpNotFound();
             }
@@ -138,5 +146,24 @@ namespace TheatreBlogAssessment.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        
+        
+        public ActionResult Approve(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Comment comment = db.Comments.Find(id);
+            if (comment == null)
+            {
+                return HttpNotFound();
+            }
+            return RedirectToAction("Edit", "Home", new { id = comment.CommentId });
+        }
+
+        
     }
-}
+    }
+
