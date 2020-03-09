@@ -247,15 +247,6 @@ namespace TheatreBlogAssessment.Controllers
                 await userManager.RemoveFromRoleAsync(id, oldRole);
                 await userManager.AddToRoleAsync(id, model.Role);
 
-                if(model.Role != "Suspended")
-                {
-                    //I have no idea what this is doing or why
-                    //db.Database.ExecuteSqlCommand(
-                    //    "UPDATE AspNetUsers SET Discriminator={0} WHERE id={1}",
-                    //    model.Role == "Admin" ? "Staff" : model.Role,
-                    //    id);
-                }
-                //[Flash success msg]
                 return RedirectToAction("Index");
             }
             return View(model);

@@ -58,6 +58,7 @@
     {
     @Html.ActionLink("Edit", "Edit", new { id = Model.PostId })
     }
+
     @Html.ActionLink("Comment", "CreateComment", new { id = Model.PostId })
 
     @Html.ActionLink("Back to List", "Index")
@@ -85,11 +86,14 @@
         <td>
             @if (User.Identity.Name == item.User.UserName)
             {
-                @Html.ActionLink("Edit ", "EditComment", new { id = item.CommentId }) 
+                @Html.ActionLink("Edit ", "EditComment", new { id = item.CommentId })
                 @Html.ActionLink("Delete", "Delete", new { id = item.CommentId })
             }
-            
-            </td>
+            @if (User.IsInRole("Admin"))
+            {
+                @Html.ActionLink("Delete", "Delete", new { id = item.CommentId })
+            }
+        </td>
         
             <td>
                 

@@ -76,6 +76,10 @@
                 @*@Html.ActionLink("Delete", "Delete", new { id = item.PostId })*@
 
                 | @Html.ActionLink("Details", "Details", new { id = item.PostId }) |
+                @if (User.IsInRole("Admin") || User.Identity.Name == item.User.UserName)
+                {
+                    @Html.ActionLink("Delete", "Delete", new { id = item.PostId })
+                }
             </td>
         </tr>
     }

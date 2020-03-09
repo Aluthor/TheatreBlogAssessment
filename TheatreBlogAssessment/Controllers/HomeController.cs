@@ -189,5 +189,20 @@ namespace TheatreBlogAssessment.Controllers
 
         }
 
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Post post = context.Posts.Find(id);
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+
+            return RedirectToAction("Delete", "Staff", new { id = post.PostId });
+        }
     }
 }
