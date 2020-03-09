@@ -184,15 +184,19 @@ namespace TheatreBlogAssessment.Models
             var com1 = new Comment()
             {
                 Content = "FIRST!1!!",
-                Post = post1
-                //User = member2
+                Post = post1,
+                CommentDate = new DateTime(2020, 1, 1, 8, 0, 15),
+                User = member2,
+                IsAproved = false
             };
             context.Comments.Add(com1);
             var com2 = new Comment()
             {
                 Content = "FIRST!2!!",
                 Post = post1,
-                User = member1
+                CommentDate = new DateTime(2020, 1, 1, 8, 0, 15),
+                User = member1,
+                IsAproved = true
             };
             
             context.Comments.Add(com2);

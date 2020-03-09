@@ -56,3 +56,37 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.PostId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<table class="table" title="comments">
+    @foreach (var item in Model.Comments)
+    {
+        <tr>
+            <td>
+                @Html.DisplayNameFor(ModelItem => item.User.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserName)
+            </td>
+            <td>
+                @Html.DisplayNameFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+
+            <td>
+                @if (User.IsInRole("Member"))
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.CommentId })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.CommentId })
+                }
+                @if ((User.IsInRole("Staff") || User.IsInRole("Admin")) && item.IsAproved == false)
+                {
+                    @Html.ActionLink("Approve", "Approve", new { id = item.CommentId })
+                }
+            </td>
+        </tr>
+        <br />
+    }
+
+</table>
+

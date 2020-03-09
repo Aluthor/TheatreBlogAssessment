@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using TheatreBlogAssessment.Models;
 using System.Data.Entity;
+using System.Net;
+using Microsoft.AspNet.Identity;
 
 namespace TheatreBlogAssessment.Controllers
 {
@@ -41,6 +43,61 @@ namespace TheatreBlogAssessment.Controllers
 
             return View(post);
         }
+
+        [Authorize(Roles ="Member, Staff, Admin")]
+        public ActionResult CreateComment(int? id)
+        {
+            //ViewBag.PostId = new SelectList(db.Posts, "PostId", "Title");
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Post post = context.Posts.Find(id);
+            Comment comment = new Comment();
+
+            comment.PostId = post.PostId;
+
+            if (post == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(comment);
+        }
+
+        // POST: Member/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateComment(Comment comment, int id)
+        {
+            if (ModelState.IsValid)
+            {
+                comment.CommentDate = DateTime.Now;
+                comment.UserId = User.Identity.GetUserId();
+                if (User.IsInRole("Admin"))
+                {
+                    comment.IsAproved = true;
+                }
+                else
+                {
+                    comment.IsAproved = false;
+                }
+
+                comment.HasBeenEdited = false;
+
+                Post post = context.Posts.Find(id);
+                comment.Post = post;
+
+                context.Comments.Add(comment);
+                context.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(comment);
+        }
+
 
     }
 }

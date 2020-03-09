@@ -23,7 +23,8 @@ namespace TheatreBlogAssessment.Models
         public int CommentId { get; set; }
         [Required]
         public string Content { get; set; }
-
+        public DateTime CommentDate { get; set; }
+        public bool HasBeenEdited { get; set; }
         public bool IsAproved { get; set; }
     }
 }
