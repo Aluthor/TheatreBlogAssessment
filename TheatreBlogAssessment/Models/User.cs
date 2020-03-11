@@ -32,7 +32,7 @@ namespace TheatreBlogAssessment.Models
         [Required]
         [Display(Name = "Postcode")]
         public string Postcode { get; set; }
-        [Required]
+        
         
         //navigational
         public List<Comment> Comments { get; set; }
