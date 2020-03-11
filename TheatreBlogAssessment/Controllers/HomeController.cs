@@ -69,6 +69,7 @@ namespace TheatreBlogAssessment.Controllers
         // POST: Member/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles =("Member, Staff, Admin"))]
         public ActionResult CreateComment(Comment comment, int id)
         {
             if (ModelState.IsValid)

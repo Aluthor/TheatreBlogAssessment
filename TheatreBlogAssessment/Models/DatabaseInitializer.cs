@@ -35,6 +35,14 @@ namespace TheatreBlogAssessment.Models
                 roleManager.Create(new IdentityRole("Member"));
             }
 
+            //Suspended
+            if (!roleManager.RoleExists("Suspended"))
+            {
+                roleManager.Create(new IdentityRole("Suspended"));
+            }
+
+            context.SaveChanges();
+
             ////Creating Admin Users/////////
             UserManager<User> userManager = new UserManager<User>(new UserStore<User>(context));
             if(userManager.FindByName("admin@admin.com") == null)
@@ -119,8 +127,31 @@ namespace TheatreBlogAssessment.Models
             if (userManager.FindByName("member2@member2.com") == null)
             {
                 userManager.Create(member2, "member456");
-                userManager.AddToRole(member2.Id, "Member");
+                userManager.AddToRole(member2.Id, "Suspended");
             }
+
+            //SUSPENDED USER
+            //if (userManager.FindByName("suspended@member.com") == null)
+            //{
+            //    var suspended = new User()
+            //    {
+            //        UserName = "suspended@member.com",
+            //        Email = "suspended@member.com",
+            //        FirstName = "suspended",
+            //        LastName = "Member",
+            //        Street = "Smember street",
+            //        City = "Smember City",
+            //        Postcode = "S34 6M1",
+            //        EmailConfirmed = true,
+            //        IsSuspended = true
+            //    };
+            //    userManager.Create(suspended, "no");
+            //    userManager.AddToRole(suspended.Id, "Suspended");
+            //}
+
+            
+            
+            
 
             context.SaveChanges();
 
