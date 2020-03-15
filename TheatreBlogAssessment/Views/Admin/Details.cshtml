@@ -1,4 +1,4 @@
-﻿@model TheatreBlogAssessment.Models.Category
+﻿@model TheatreBlogAssessment.Models.Post
 
 @{
     ViewBag.Title = "Details";
@@ -7,20 +7,93 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Category</h4>
+    <h4>Post</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Category.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DatePosted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DatePosted)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CategoryId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PostId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<table class="table" title="comments">
+    @foreach (var item in Model.Comments)
+    {
+        if (Model.PostId == item.PostId && (item.IsAproved == true || (User.IsInRole("Staff") || User.IsInRole("Admin")) || User.Identity.Name == item.User.UserName))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(ModelItem => item.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayNameFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+
+                <td>
+                    @if (User.Identity.Name == item.User.UserName)
+                    {
+                        @Html.ActionLink("Edit ", "EditComment", new { id = item.CommentId })
+                    }
+                    @if (User.Identity.Name == item.User.UserName || User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Delete", "DeleteComment", new { id = item.CommentId })
+                    }
+
+                    @if ((User.IsInRole("Staff") || User.IsInRole("Admin")) && item.IsAproved == false)
+                    {
+                        @Html.ActionLink("Approve", "Approve", new { id = item.CommentId })
+                    }
+                </td>
+            </tr>
+            <br />
+        }
+    }
+
+</table>
+

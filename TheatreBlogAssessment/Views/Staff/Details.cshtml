@@ -59,7 +59,7 @@
 <table class="table" title="comments">
     @foreach (var item in Model.Comments)
     {
-        if (item.IsAproved == true)
+        if (Model.PostId == item.PostId && (item.IsAproved == true || (User.IsInRole("Staff") || User.IsInRole("Admin")) || User.Identity.Name == item.User.UserName))
         {
         <tr>
             <td>
