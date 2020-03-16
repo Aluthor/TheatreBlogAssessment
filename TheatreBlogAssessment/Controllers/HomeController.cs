@@ -101,7 +101,7 @@ namespace TheatreBlogAssessment.Controllers
 
             return View(comment);
         }
-        //CHANGES 
+        
         //redirects to staff controller(edit post)
         public ActionResult Edit(int? id)
         {
@@ -188,11 +188,50 @@ namespace TheatreBlogAssessment.Controllers
                 context.SaveChanges();
                 return RedirectToAction("Index");
             }
-            //ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId);
             return View(comment);
 
         }
 
+        [HttpGet]
+        public ActionResult EditDetails()
+        {
+           string id = User.Identity.GetUserId().ToString();
+            
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            User user = context.Users.Find(id);
+
+            if (user== null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        // POST: Staff/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditDetails(User user)
+        {
+
+            if (ModelState.IsValid)
+            {
+
+                
+                
+                
+
+                context.Entry(user).State = EntityState.Modified;
+                context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(user);
+
+        }
         public ActionResult Delete(int? id)
         {
             if (id == null)

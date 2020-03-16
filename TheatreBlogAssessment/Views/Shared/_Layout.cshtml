@@ -31,13 +31,13 @@
                             <li>@Html.ActionLink("My Posts", "Index", "Staff")</li>
                             <li>@Html.ActionLink("Make a Post", "Create", "Staff")</li>
                         }
-                        if(User.IsInRole("Admin"))
+                        if (User.IsInRole("Admin"))
                         {
                             <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
                         }
-
+                        <li>@Html.ActionLink("Edit my details", "EditDetails", "Home")</li>
                     }
-                    
+
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
