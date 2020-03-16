@@ -180,6 +180,7 @@
     <Compile Include="Models\ChangeRoleViewModel.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\DatabaseInitializer.cs" />
+    <Compile Include="Models\EditUserDetailsViewModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Post.cs" />
