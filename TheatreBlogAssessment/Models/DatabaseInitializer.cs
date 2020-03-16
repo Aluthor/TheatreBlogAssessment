@@ -130,24 +130,7 @@ namespace TheatreBlogAssessment.Models
                 userManager.AddToRole(member2.Id, "Suspended");
             }
 
-            //SUSPENDED USER
-            //if (userManager.FindByName("suspended@member.com") == null)
-            //{
-            //    var suspended = new User()
-            //    {
-            //        UserName = "suspended@member.com",
-            //        Email = "suspended@member.com",
-            //        FirstName = "suspended",
-            //        LastName = "Member",
-            //        Street = "Smember street",
-            //        City = "Smember City",
-            //        Postcode = "S34 6M1",
-            //        EmailConfirmed = true,
-            //        IsSuspended = true
-            //    };
-            //    userManager.Create(suspended, "no");
-            //    userManager.AddToRole(suspended.Id, "Suspended");
-            //}
+            
 
             
             

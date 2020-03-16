@@ -18,7 +18,7 @@ namespace TheatreBlogAssessment.Controllers
     {
         public TheatreDbContext db = new TheatreDbContext();
 
-        // GET: Admin
+        // GET: Admin 
         [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
@@ -100,6 +100,7 @@ namespace TheatreBlogAssessment.Controllers
             return RedirectToAction("ViewAllCategories");
         }
 
+        //Overrides the Dispose method
         protected override void Dispose(bool disposing)
         {
             if(disposing)
@@ -109,6 +110,7 @@ namespace TheatreBlogAssessment.Controllers
             base.Dispose(disposing); 
         }
 
+        //GET: ViewAllCategories
         public ActionResult ViewAllCategories()
         {
             return View(db.Categories.ToList());
@@ -131,6 +133,7 @@ namespace TheatreBlogAssessment.Controllers
             return View(category);
         }
 
+        //Redirects to the Details html page in the HomeController
         public ActionResult DetailsPost(int? id)
         {
             if (id == null)
@@ -147,19 +150,25 @@ namespace TheatreBlogAssessment.Controllers
             return RedirectToAction("Details", "Home", new { id = post.PostId });
         }
 
+
         //******************************Posts********************************
+
+        //GET: Admin/ViewAllPosts
         [Authorize(Roles = "Admin")]
         public ActionResult ViewAllPosts()
         {
             List<Post> posts = db.Posts.Include(p => p.Category).Include(p => p.User).ToList();
             return View(posts);
         }
+
+        //POST: Admin/ViewAllPosts
         [HttpPost]
         public ActionResult ViewAllPosts(string SearchString)
         {
+            //finds all posts where the category matches the value in the search string
             var posts = db.Posts.Include(p => p.Category).Include(p => p.User).Where(p => p.Category.Name.Equals(SearchString.Trim())).OrderByDescending(p => p.DatePosted);
             ViewBag.Categories = db.Categories.ToList();
-            return View(posts.ToList());
+            return View(posts.ToList()); //returns the sorted list of posts within the searched category
         }
 
         //GET: Posts/Delete/5
@@ -177,16 +186,18 @@ namespace TheatreBlogAssessment.Controllers
             return View(post);
         }
 
+        //POST: Posts/Delete/5
         [HttpPost, ActionName("DeletePost")]
         [ValidateAntiForgeryToken]
         public ActionResult DeletePostConfirmed(int id)
         {
-            Post post = db.Posts.Find(id);
-            db.Posts.Remove(post);
+            Post post = db.Posts.Find(id); //Finds the post to be deleted
+            db.Posts.Remove(post); //removes it from the db
             db.SaveChanges();
             return RedirectToAction("ViewAllPosts");
         }
 
+        //redirects to the DeleteComment page in the HomeController
         public ActionResult DeleteComment(int? id)
         {
             if (id == null)
@@ -204,12 +215,15 @@ namespace TheatreBlogAssessment.Controllers
         }
 
         //************************USERS****************************
+
+        //GET: Admin/ViewUsers
         [Authorize(Roles = "Admin")]
         public ActionResult ViewUsers()
         {
+            //creates a list of all users
             List<User> users = db.Users.Include(u => u.Roles).OrderBy(u => u.LastName).ToList();
 
-            return View(users);
+            return View(users); 
         }
 
         //HttpGET ChangeRole Action
@@ -244,6 +258,7 @@ namespace TheatreBlogAssessment.Controllers
             });
         }
 
+        //HttpPOST ChangeRole Action
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("ChangeRole")]
@@ -261,14 +276,14 @@ namespace TheatreBlogAssessment.Controllers
                 User user = await userManager.FindByIdAsync(id);
                 string oldRole = (await userManager.GetRolesAsync(id)).Single();
 
+                //if the new role is the same as the old role
                 if (oldRole == model.Role)
                 {
-                    //[Flash error]
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index");//redirect to the index
                 }
 
-                await userManager.RemoveFromRoleAsync(id, oldRole);
-                await userManager.AddToRoleAsync(id, model.Role);
+                await userManager.RemoveFromRoleAsync(id, oldRole); //remove the user from the old role
+                await userManager.AddToRoleAsync(id, model.Role);//add the user to the new role
 
                 return RedirectToAction("Index");
             }

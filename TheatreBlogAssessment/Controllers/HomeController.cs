@@ -13,6 +13,7 @@ namespace TheatreBlogAssessment.Controllers
     public class HomeController : Controller
     {
         private TheatreDbContext context = new TheatreDbContext();
+
         // GET: Home
         public ActionResult Index()
         {
@@ -21,6 +22,7 @@ namespace TheatreBlogAssessment.Controllers
             return View(posts.ToList());
         }
 
+        //POST: Home
         [HttpPost]
         public ActionResult Index(string SearchString)
         {
@@ -29,6 +31,7 @@ namespace TheatreBlogAssessment.Controllers
             return View(posts.ToList());
         }
 
+        //GET: Home/Details
         public ActionResult Details(int id)
         {
             Post post = context.Posts.Find(id);
@@ -44,10 +47,10 @@ namespace TheatreBlogAssessment.Controllers
             return View(post);
         }
 
+        //GET create comment action, all users except anonymous are authorized
         [Authorize(Roles = "Member, Staff, Admin")]
         public ActionResult CreateComment(int? id)
         {
-            //ViewBag.PostId = new SelectList(db.Posts, "PostId", "Title");
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -70,7 +73,7 @@ namespace TheatreBlogAssessment.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles =("Member, Staff, Admin"))]
-        public ActionResult CreateComment(Comment comment, int id)
+        public ActionResult CreateComment(Comment comment, int id) 
         {
             if (ModelState.IsValid)
             {
@@ -98,7 +101,7 @@ namespace TheatreBlogAssessment.Controllers
 
             return View(comment);
         }
-
+        //CHANGES 
         //redirects to staff controller(edit post)
         public ActionResult Edit(int? id)
         {
