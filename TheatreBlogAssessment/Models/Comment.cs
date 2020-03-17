@@ -10,7 +10,7 @@ namespace TheatreBlogAssessment.Models
     public class Comment
     {
         
-        
+        //navigational properties
         [ForeignKey("Post")]
         public int PostId { get; set; }
         public Post Post{ get; set; }
@@ -19,6 +19,7 @@ namespace TheatreBlogAssessment.Models
         public string UserId { get; set; }
         public User User { get; set; }
 
+        //Properties
         [Key]
         public int CommentId { get; set; }
         [Required]

@@ -9,6 +9,7 @@ namespace TheatreBlogAssessment.Models
 {
     public class TheatreDbContext : IdentityDbContext<User>
     {
+        //Initializes the database with the seeded tables
         public DbSet<Category> Categories { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }

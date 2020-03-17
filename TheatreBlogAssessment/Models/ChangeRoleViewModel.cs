@@ -7,8 +7,10 @@ using System.Web.Mvc;
 
 namespace TheatreBlogAssessment.Models
 {
+    //view model which contains information used to change a users role
     public class ChangeRoleViewModel
     {
+        //Properties
         public string UserName { get; set; }
         public string OldRole { get; set; }
         public ICollection<SelectListItem> Roles { get; set; }

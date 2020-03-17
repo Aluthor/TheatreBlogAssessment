@@ -13,25 +13,36 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace TheatreBlogAssessment.Controllers
 {
+    //only admin users can access AdminController actions
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         public TheatreDbContext db = new TheatreDbContext();
 
-        // GET: Admin 
+        /// <summary>
+        /// HttpGet action which returns the Admin controls page
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: Admin/Create
+        /// <summary>
+        /// HttpGet action which returns the view to create a category
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/Create
+        /// <summary>
+        /// HttpPost action which takes in the users input and adds it to the database as a category
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CategoryId, Name")] Category category)
@@ -45,14 +56,18 @@ namespace TheatreBlogAssessment.Controllers
             return View(category);
         }
 
-        // GET: Admin/Edit/5
-        public ActionResult Edit(int id)
+        /// <summary>
+        /// HttpGet action to edit an existing category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            Category category = db.Categories.Find(id); //finds the category in the db by id
             if (category == null)
             {
                 return HttpNotFound();
@@ -60,7 +75,11 @@ namespace TheatreBlogAssessment.Controllers
             return View(category);
         }
 
-        // POST: Admin/Edit/5
+        /// <summary>
+        /// HttpPost action that changes the category's state to modified and saves the changes to it to the database
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CategoryId, Name")] Category category)
@@ -74,22 +93,30 @@ namespace TheatreBlogAssessment.Controllers
             return View(category);
         }
 
-        // GET: Admin/Delete/5
+        /// <summary>
+        /// HttpGet action which takes in the id of the category to be deleted
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Delete(int? id)
         {
             if(id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            Category category = db.Categories.Find(id);//finds the category to be deleted
             if(category == null)
             {
                 return HttpNotFound();
             }
-            return View(category);
+            return View(category); //returns the category to be deleted to the confirmation page
         }
 
-        // POST: Admin/Delete/5
+        /// <summary>
+        /// HttpPost action that removes the category from the database after confirmation
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -100,7 +127,10 @@ namespace TheatreBlogAssessment.Controllers
             return RedirectToAction("ViewAllCategories");
         }
 
-        //Overrides the Dispose method
+        /// <summary>
+        /// overrides the default dispose method
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if(disposing)
@@ -110,13 +140,20 @@ namespace TheatreBlogAssessment.Controllers
             base.Dispose(disposing); 
         }
 
-        //GET: ViewAllCategories
+        /// <summary>
+        /// HttpGet which returns the view all categories page with a list of categories
+        /// </summary>
+        /// <returns></returns>
         public ActionResult ViewAllCategories()
         {
             return View(db.Categories.ToList());
         }
 
-        // GET: Categories/Details/5
+        /// <summary>
+        /// HttpGet action which returns the details of the selected category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Details(int? id)
         {
             if(id == null)
@@ -133,7 +170,11 @@ namespace TheatreBlogAssessment.Controllers
             return View(category);
         }
 
-        //Redirects to the Details html page in the HomeController
+        /// <summary>
+        /// HttpGet action which redirects an admins request for the post details page to the HomeController
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult DetailsPost(int? id)
         {
             if (id == null)
@@ -153,7 +194,10 @@ namespace TheatreBlogAssessment.Controllers
 
         //******************************Posts********************************
 
-        //GET: Admin/ViewAllPosts
+        /// <summary>
+        /// HttpGet action which returns the view all posts page with a list of posts
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         public ActionResult ViewAllPosts()
         {
@@ -161,7 +205,12 @@ namespace TheatreBlogAssessment.Controllers
             return View(posts);
         }
 
-        //POST: Admin/ViewAllPosts
+        /// <summary>
+        /// HttpPost action which takes in the search string containing the category
+        /// and returns a list of posts in that category to the view
+        /// </summary>
+        /// <param name="SearchString"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult ViewAllPosts(string SearchString)
         {
@@ -171,7 +220,11 @@ namespace TheatreBlogAssessment.Controllers
             return View(posts.ToList()); //returns the sorted list of posts within the searched category
         }
 
-        //GET: Posts/Delete/5
+        /// <summary>
+        /// HttpGet action which takes in the id of the post to be deleted
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult DeletePost(int? id)
         {
             if(id == null)
@@ -186,7 +239,11 @@ namespace TheatreBlogAssessment.Controllers
             return View(post);
         }
 
-        //POST: Posts/Delete/5
+        /// <summary>
+        /// HttpPost action which removes the post from the db after the deletion has been confirmed
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("DeletePost")]
         [ValidateAntiForgeryToken]
         public ActionResult DeletePostConfirmed(int id)
@@ -197,7 +254,11 @@ namespace TheatreBlogAssessment.Controllers
             return RedirectToAction("ViewAllPosts");
         }
 
-        //redirects to the DeleteComment page in the HomeController
+        /// <summary>
+        /// HttpGet action which redirects to the HomeController's DeleteComment
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult DeleteComment(int? id)
         {
             if (id == null)
@@ -216,7 +277,10 @@ namespace TheatreBlogAssessment.Controllers
 
         //************************USERS****************************
 
-        //GET: Admin/ViewUsers
+        /// <summary>
+        /// HttpGet method which returns a list of all users to the view
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         public ActionResult ViewUsers()
         {
@@ -226,7 +290,11 @@ namespace TheatreBlogAssessment.Controllers
             return View(users); 
         }
 
-        //HttpGET ChangeRole Action
+        /// <summary>
+        /// HttpGet action which takes in the id of the user who's role is to be changed
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ActionResult> ChangeRole(string id)
         {
             UserManager<User> userManager = new UserManager<User>(new UserStore<User>(db));
@@ -240,8 +308,8 @@ namespace TheatreBlogAssessment.Controllers
                 return RedirectToAction("Index");
             }
             
-            User user = await userManager.FindByIdAsync(id);
-            string oldRole = (await userManager.GetRolesAsync(id)).Single();
+            User user = await userManager.FindByIdAsync(id); //finds the user whose role is to be changed
+            string oldRole = (await userManager.GetRolesAsync(id)).Single(); //finds their old role
 
             var items = db.Roles.Select(r => new SelectListItem
             {
@@ -258,7 +326,12 @@ namespace TheatreBlogAssessment.Controllers
             });
         }
 
-        //HttpPOST ChangeRole Action
+        /// <summary>
+        /// HttpPost action which changes the users role in the database after its been confirmed
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("ChangeRole")]
@@ -268,7 +341,7 @@ namespace TheatreBlogAssessment.Controllers
 
             if (id == User.Identity.GetUserId())
             {
-                //Flash.Instance.Error("Error", "You cannot change your own role");
+                //Users cannot change their own role
                 return RedirectToAction("Index");
             }
             if(ModelState.IsValid)

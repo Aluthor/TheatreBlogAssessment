@@ -9,6 +9,7 @@ namespace TheatreBlogAssessment.Models
 {
     public class Post
     {
+        //properties
         [Key]
         public int PostId { get; set; }
         [DataType(DataType.MultilineText)]
@@ -19,8 +20,8 @@ namespace TheatreBlogAssessment.Models
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime DatePosted { get; set; }
-        //public Staff Author {get; set;}
-
+        
+        //navigational properties
         [ForeignKey("User")]
         public string UserId { get; set; }
         public User User { get; set; }

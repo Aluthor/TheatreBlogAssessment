@@ -17,6 +17,7 @@ namespace TheatreBlogAssessment.Models
     {
         private ApplicationUserManager userManager;
 
+        //properties
         [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
@@ -34,10 +35,13 @@ namespace TheatreBlogAssessment.Models
         public string Postcode { get; set; }
         
         
-        //navigational
+        //navigational properties
         public List<Comment> Comments { get; set; }
         public List<Post> Posts { get; set; }
 
+        /// <summary>
+        /// method to find the users current role
+        /// </summary>
         [NotMapped]
         public string CurrentRole
         {
@@ -55,9 +59,7 @@ namespace TheatreBlogAssessment.Models
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager)
         {
-            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
-            // Add custom user claims here
             return userIdentity;
         }
     }

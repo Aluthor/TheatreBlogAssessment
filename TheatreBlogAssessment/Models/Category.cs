@@ -8,12 +8,13 @@ namespace TheatreBlogAssessment.Models
 {
     public class Category
     {
+        //Properties
         [Key]
         public int CategoryId { get; set; }
         [Display(Name = "Category")]
         public string Name { get; set; }
 
-        //One category has many 
+        //navigational properties
         public List<Post> Posts { get; set; }
     }
 }
