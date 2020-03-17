@@ -47,13 +47,20 @@ namespace TheatreBlogAssessment.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CategoryId, Name")] Category category)
         {
-            if(ModelState.IsValid)
+            if(category.Name == null)
             {
-                db.Categories.Add(category);
-                db.SaveChanges();
-                return RedirectToAction("ViewAllCategories");
+                return RedirectToAction("Index");
             }
-            return View(category);
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    db.Categories.Add(category);
+                    db.SaveChanges();
+                    return RedirectToAction("ViewAllCategories");
+                }
+                return View(category);
+            }
         }
 
         /// <summary>

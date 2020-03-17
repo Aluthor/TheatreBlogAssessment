@@ -75,19 +75,26 @@ namespace TheatreBlogAssessment.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "PostId, Title, Content, CategoryId")] Post post)
         {
-            if (ModelState.IsValid)
+            if (post.Content == null || post.Title==null)
             {
-                post.DatePosted = DateTime.Now;
-                post.UserId = User.Identity.GetUserId();
-
-                db.Posts.Add(post);
-                db.SaveChanges();
-
                 return RedirectToAction("Index");
             }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    post.DatePosted = DateTime.Now;
+                    post.UserId = User.Identity.GetUserId();
 
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId);
-            return View(post);
+                    db.Posts.Add(post);
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+
+                ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", post.CategoryId);
+                return View(post);
+            }
         }
 
         /// <summary>
